@@ -389,7 +389,16 @@ void StartWebView(const std::wstring& appDir)
                                 // Отдаём распакованные файлы как https://app.local/
                                 // (полноценный origin: работает clipboard, localStorage,
                                 //  iframe-плееры и parent= для Twitch).
-                                g_webview->SetVirtualHostNameToFolderMapping(
+                                // SetVirtualHostNameToFolderMapping живёт в ICoreWebView2_3.
+                                ComPtr<ICoreWebView2_3> webview3;
+                                if (FAILED(g_webview.As(&webview3)) || !webview3) {
+                                    MessageBoxW(g_main,
+                                                L"Версия WebView2 Runtime слишком старая.\n"
+                                                L"Обнови «Microsoft Edge WebView2 Runtime».",
+                                                L"StreamPlayer", MB_ICONERROR | MB_OK);
+                                    return S_OK;
+                                }
+                                webview3->SetVirtualHostNameToFolderMapping(
                                     kVirtualHost, appDir.c_str(),
                                     COREWEBVIEW2_HOST_RESOURCE_ACCESS_KIND_ALLOW);
                                 g_webview->Navigate(kStartUrl);
