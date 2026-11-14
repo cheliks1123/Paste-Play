@@ -494,8 +494,13 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR, int)
     mainClass.style = CS_HREDRAW | CS_VREDRAW;
     mainClass.lpfnWndProc = MainProc;
     mainClass.hInstance = instance;
-    mainClass.hIcon = LoadIconW(nullptr, IDI_APPLICATION);
-    mainClass.hIconSm = LoadIconW(nullptr, IDI_APPLICATION);
+    // Иконка вшита в exe (ресурс ICON с id 1, см. appfiles.rc.in).
+    mainClass.hIcon = static_cast<HICON>(LoadImageW(instance, MAKEINTRESOURCEW(1), IMAGE_ICON,
+                                                    GetSystemMetrics(SM_CXICON), GetSystemMetrics(SM_CYICON), LR_DEFAULTCOLOR));
+    mainClass.hIconSm = static_cast<HICON>(LoadImageW(instance, MAKEINTRESOURCEW(1), IMAGE_ICON,
+                                                      GetSystemMetrics(SM_CXSMICON), GetSystemMetrics(SM_CYSMICON), LR_DEFAULTCOLOR));
+    if (!mainClass.hIcon) mainClass.hIcon = LoadIconW(nullptr, IDI_APPLICATION);
+    if (!mainClass.hIconSm) mainClass.hIconSm = LoadIconW(nullptr, IDI_APPLICATION);
     mainClass.hCursor = LoadCursorW(nullptr, IDC_ARROW);
     mainClass.hbrBackground = g_background;
     mainClass.lpszClassName = kMainClass;

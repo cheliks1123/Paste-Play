@@ -87,6 +87,7 @@ endif()
 file(TO_NATIVE_PATH "${APP_ASSETS}/index.html" ASSET_INDEX)
 file(TO_NATIVE_PATH "${APP_ASSETS}/media/demo.mp4" ASSET_DEMO)
 file(TO_NATIVE_PATH "${APP_ASSETS}/media/poster.jpg" ASSET_POSTER)
+file(TO_NATIVE_PATH "${APP_ASSETS}/icon/app.ico" ASSET_ICON)
 
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/src/appfiles.rc.in"
                "${CMAKE_CURRENT_BINARY_DIR}/appfiles.rc" @ONLY)

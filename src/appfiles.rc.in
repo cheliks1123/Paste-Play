@@ -1,5 +1,6 @@
 // Resource IDs must match kRes* constants in src/main.cpp
 // Paths are substituted by CMake (see CMakeLists.txt).
+1 ICON "@ASSET_ICON@"
 2001 RCDATA "@ASSET_INDEX@"
 2002 RCDATA "@ASSET_DEMO@"
 2003 RCDATA "@ASSET_POSTER@"

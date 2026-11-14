@@ -41,7 +41,33 @@ jobs:
           }
 
           cmake -S . -B build -G "Visual Studio 17 2022" -A x64
-          if ($LASTEXITCODE -eq 0) {
-            "Configured with Visual Studio 17 2022 generator"
-            exit 0
-          
+          if ($LASTEXITCODE -ne 0) {
+            throw "CMake configure не прошёл (код $LASTEXITCODE). Смотри лог выше."
+          }
+          "Configured with Visual Studio 17 2022 generator"
+
+      - name: Build (Release)
+        shell: pwsh
+        run: |
+          cmake --build build --config Release --parallel
+          if ($LASTEXITCODE -ne 0) {
+            throw "Сборка не прошла (код $LASTEXITCODE). Смотри лог выше."
+          }
+
+      - name: Check result
+        shell: pwsh
+        run: |
+          $exe = "build/Release/StreamPlayer.exe"
+          if (-not (Test-Path $exe)) {
+            Get-ChildItem build -Recurse -Filter *.exe | ForEach-Object { $_.FullName }
+            throw "StreamPlayer.exe не найден: $exe"
+          }
+          $f = Get-Item $exe
+          "StreamPlayer.exe: {0:N1} MB" -f ($f.Length / 1MB)
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: StreamPlayer-x64
+          path: build/Release/StreamPlayer.exe
+          if-no-files-found: error
